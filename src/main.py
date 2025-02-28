@@ -38,22 +38,43 @@ def get_operator() -> CalcOperator:
     return operator_input
 
 
-def get_calculation(first_number, operator, last_number) -> float:
-    calculation = None
-    if operator == CalcOperator.ADD.value:
-        calculation = first_number + last_number
-    elif operator == CalcOperator.SUBTRACT.value:
-        calculation = first_number - last_number
+def add(first_number, last_number) -> float:
+    return first_number + last_number
+
+
+def subtract(first_number, last_number) -> float:
+    return first_number - last_number
+
+
+def multiply(first_number, last_number) -> float:
+    return first_number * last_number
+
+
+def divide(first_number, last_number) -> float:
+    result = None
+    while result == None:
+        try:
+            result = first_number / last_number
+        except ZeroDivisionError:
+            print("ERROR - Cannot divide by zero.")
+            last_number = get_number()
+    return result
+
+
+def get_calculation(first_number, operator, last_number) -> dict:
+    if operator == CalcOperator.SUBTRACT.value:
+        result = subtract(first_number, last_number)
     elif operator == CalcOperator.MULTIPLY.value:
-        calculation = first_number * last_number
+        result = multiply(first_number, last_number)
     elif operator == CalcOperator.DIVIDE.value:
-        while calculation == None:
-            try:
-                calculation = first_number / last_number
-            except ZeroDivisionError:
-                print("ERROR - Cannot divide by zero.")
-                last_number = get_number()
-    return f"{first_number} {operator} {last_number} = {calculation}"
+        result = divide(first_number, last_number)
+    else:
+        result = add(first_number, last_number)
+
+    return {
+        "result": result,
+        "msg": f"{first_number} {operator} {last_number} = {result}",
+    }
 
 
 def loop() -> None:
@@ -63,7 +84,7 @@ def loop() -> None:
         chosen_operator = get_operator()
         last_number = get_number()
         calculation = get_calculation(first_number, chosen_operator, last_number)
-        print(calculation)
+        print(calculation["msg"])
         print()
 
 
@@ -71,11 +92,6 @@ def main() -> None:
     print("-- Calculator --")
     print("To exit anytime enter 'Q'")
     loop()
-    # first_number = get_number()
-    # chosen_operator = get_operator()
-    # last_number = get_number()
-    # calculation = get_calculation(first_number, chosen_operator, last_number)
-    # print(calculation)
 
 
 if __name__ == "__main__":
