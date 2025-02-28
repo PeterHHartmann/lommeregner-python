@@ -1,4 +1,5 @@
 from enum import Enum
+import math
 
 
 def input_with_exit(prompt=""):
@@ -25,13 +26,15 @@ class CalcOperator(str, Enum):
     SUBTRACT = "-"
     MULTIPLY = "*"
     DIVIDE = "/"
+    SQUARED = "sqrt"
+    EXPONENT = "^"
 
 
 def get_operator() -> CalcOperator:
     possible_operators = [e.value for e in CalcOperator]
     operator_input = None
     while operator_input not in possible_operators:
-        raw_input = input_with_exit("Enter an operator (+, -, *, /): ")
+        raw_input = input_with_exit("Enter an operator (+, -, *, /, sqrt, ^): ")
         operator_input = raw_input.strip()
         if operator_input not in possible_operators:
             print("ERROR - Please enter a valid operator.")
@@ -61,19 +64,33 @@ def divide(first_number, last_number) -> float:
     return result
 
 
+def square(last_number) -> float:
+    return math.sqrt(last_number)
+
+
+def exponent(first_number, last_number) -> float:
+    return first_number**last_number
+
+
 def get_calculation(first_number, operator, last_number) -> dict:
+    msg = f"{first_number} {operator} {last_number} = "
     if operator == CalcOperator.SUBTRACT.value:
         result = subtract(first_number, last_number)
     elif operator == CalcOperator.MULTIPLY.value:
         result = multiply(first_number, last_number)
     elif operator == CalcOperator.DIVIDE.value:
         result = divide(first_number, last_number)
+    elif operator == CalcOperator.SQUARED.value:
+        result = square(last_number)
+        msg = f"{operator}({last_number}) = "
+    elif operator == CalcOperator.EXPONENT.value:
+        result = exponent(first_number, last_number)
+        msg = f"{first_number}^{last_number} = "
     else:
         result = add(first_number, last_number)
-
     return {
         "result": result,
-        "msg": f"{first_number} {operator} {last_number} = {result}",
+        "msg": msg + str(result),
     }
 
 
