@@ -1,8 +1,10 @@
-import unittest
-from src.main import get_number, parse_number_input
+from unittest import TestCase
+from unittest.mock import patch
+from src.main import get_number
 
 
-class TestGetFirstNumber(unittest.TestCase):
+class TestGetFirstNumber(TestCase):
 
-    def test_not_a_number(self):
-        self.assertEqual(parse_number_input("1"), 1)
+    @patch("builtins.input", return_value="1")
+    def test_not_a_number(self, input):
+        self.assertEqual(get_number(), 1)
